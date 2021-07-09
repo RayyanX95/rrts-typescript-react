@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { ITodo, fetchTodoList } from '../actions';
+import { ITodo, fetchTodoList, deleteTodo } from '../actions';
 import { StoreState } from '../reducers';
 
 interface AppProps {
   todoList: ITodo[];
   fetchTodoList(): any;
+  deleteTodo(id: number): void;
 }
 
 class App extends Component<AppProps> {
@@ -16,9 +17,15 @@ class App extends Component<AppProps> {
 
   renderList = (): JSX.Element[] => {
     return this.props.todoList.map((todo: ITodo) => {
-      return <li key={todo.id} >{todo.title}</li>
+      return <li
+        key={todo.id}
+        onClick={() => this.onTodoClick(todo.id)} >{todo.title}</li>
     })
   }
+
+  onTodoClick = (id: number): void => {
+    this.props.deleteTodo(id);
+  };
 
   render() {
     return (
@@ -37,7 +44,8 @@ const mapStateToProps = (state: StoreState): { todoList: ITodo[] } => {
 }
 
 const mapDispatchToProps = {
-  fetchTodoList: fetchTodoList
+  fetchTodoList,
+  deleteTodo
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
