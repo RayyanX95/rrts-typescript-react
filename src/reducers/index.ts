@@ -1,5 +1,11 @@
 import { combineReducers } from "redux";
+import { ITodo } from "../actions";
+import { todoListReducer } from "./todoList";
 
-export const reducers = combineReducers({
-  counter: () => 1
-})
+export interface StoreState {
+  todoList: ITodo[]
+}
+
+export const reducers = combineReducers<StoreState>({
+  todoList: todoListReducer,
+});
