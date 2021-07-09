@@ -10,9 +10,28 @@ interface AppProps {
   deleteTodo(id: number): void;
 }
 
-class App extends Component<AppProps> {
+interface IAppSTate {
+  fetching: boolean;
+}
+
+class App extends Component<AppProps, IAppSTate> {
+
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {
+      fetching: false,
+    }
+  }
+
+  componentDidUpdate = (prevProps: AppProps) => {
+    if (!prevProps.todoList.length && this.props.todoList.length) {
+      this.setState({ fetching: false });
+    }
+  }
+
   onFetchHandler = (): void => {
     this.props.fetchTodoList();
+    this.setState({ fetching: true });
   }
 
   renderList = (): JSX.Element[] => {
@@ -31,6 +50,7 @@ class App extends Component<AppProps> {
     return (
       <div>
         <button onClick={this.onFetchHandler} >Fetch</button>
+        {this.state.fetching && 'LOADING'}
         <ul>
           {this.renderList()}
         </ul>
